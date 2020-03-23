@@ -9,7 +9,7 @@ class ClassDetail extends StatefulWidget {
   final String appBarTitle;
   final Class note;
 
-  ClassDetail(this. note, this.appBarTitle);
+  ClassDetail(this.note, this.appBarTitle);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,23 +20,11 @@ class ClassDetail extends StatefulWidget {
 
 class ClassDetailState extends State<ClassDetail> {
 
+
   DateTime _sDate;
-  bool isGroup = false;
+  DateTime _eDate;
+  bool isGroup;
 
-  /*Future<Null> selectDate(BuildContext context) async {
-    final DateTime _sDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030)
-
-    );
-    if(_sDate != null){
-      print(_sDate.toString());
-      this._sDate = _sDate;
-    }
-
-  }*/
 
   static var _priorities = ['Group', 'Private', 'Circle'];
 
@@ -48,17 +36,27 @@ class ClassDetailState extends State<ClassDetail> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  TextEditingController dateController = TextEditingController();
+  TextEditingController sDateController = TextEditingController();
+  TextEditingController eDateController = TextEditingController();
 
   ClassDetailState(this.note, this.appBarTitle);
-
+  @override
+  void initState(){
+    super.initState();
+    sDateController.text = note.sdate;
+    eDateController.text = note.edate;
+  }
   @override
   Widget build(BuildContext context) {
 
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
+    //_sDate = new DateFormat("dd/mm/yyyy").parse(note.sdate);
+    //_eDate = new DateFormat("dd/mm/yyyy").parse(note.edate);
+
     titleController.text = note.title;
     descriptionController.text = note.description;
+    isGroup = note.priority==1?true:false;
 
     return WillPopScope(
 
@@ -106,7 +104,10 @@ class ClassDetailState extends State<ClassDetail> {
                             isGroup = true;}
                           else{
                             isGroup = false;
-                            dateController.text = '';
+                            sDateController.clear();
+                            eDateController.clear();
+                            note.sdate = '';
+                            note.edate = '';
                           }
 
                         });
@@ -160,7 +161,7 @@ class ClassDetailState extends State<ClassDetail> {
                   child: TextField(
                     enabled: isGroup?true:false,
                     readOnly: true,
-                    controller: dateController,
+                    controller: sDateController,
                     style: textStyle,
 
 
@@ -181,8 +182,10 @@ class ClassDetailState extends State<ClassDetail> {
                         setState(() {
                           if(date!=null){
                             _sDate = date;
+                            sDateController.text = (_sDate.day.toString()+'/'+_sDate.month.toString()+'/'+_sDate.year.toString());
+                            debugPrint(sDateController.text);
                           }
-                          dateController.text = (_sDate.day.toString()+'/'+_sDate.month.toString()+'/'+_sDate.year.toString());
+
                         });
 
                       });
@@ -191,6 +194,47 @@ class ClassDetailState extends State<ClassDetail> {
                     },
                   ),
                 ),
+
+
+
+                Padding(
+                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                  child: TextField(
+                    enabled: isGroup?true:false,
+                    readOnly: true,
+                    controller: eDateController,
+                    style: textStyle,
+
+
+                    decoration: InputDecoration(
+                        labelText: 'End Date',
+                        labelStyle: textStyle,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0)
+                        )
+                    ),
+                    onTap: () {
+                      showDatePicker(
+                          context: context,
+                          initialDate:  _eDate == null ? DateTime.now():_eDate ,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2030)
+                      ).then((date){
+                        setState(() {
+                          if(date!=null){
+                            _eDate = date;
+                            eDateController.text = (_eDate.day.toString()+'/'+_eDate.month.toString()+'/'+_eDate.year.toString());
+                          }
+                        });
+
+                      });
+
+
+                    },
+                  ),
+                ),
+
+
 
 
 
@@ -295,8 +339,16 @@ class ClassDetailState extends State<ClassDetail> {
   void _save() async {
 
     moveToLastScreen();
+    updateTitle();
 
-    note.date = DateFormat.yMMMd().format(DateTime.now());
+    if (_sDate!=null){
+      note.sdate = _sDate.day.toString()+'/'+_sDate.month.toString()+'/'+_sDate.year.toString();
+
+    }
+    if (_eDate!=null){
+      note.edate = _eDate.day.toString()+'/'+_eDate.month.toString()+'/'+_eDate.year.toString();
+    }
+
     int result;
     if (note.id != null) {  // Case 1: Update operation
       result = await helper.updateNote(note);

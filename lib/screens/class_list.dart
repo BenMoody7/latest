@@ -18,14 +18,14 @@ class ClassList extends StatefulWidget {
 class ClassListState extends State<ClassList> {
 
   DatabaseHelper databaseHelper = DatabaseHelper();
-  List<Class> noteList;
+  List<Class> classList;
   int count = 0;
 
   @override
   Widget build(BuildContext context) {
 
-    if (noteList == null) {
-      noteList = List<Class>();
+    if (classList == null) {
+      classList = List<Class>();
       updateListView();
     }
 
@@ -41,7 +41,7 @@ class ClassListState extends State<ClassList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint('FAB clicked');
-          navigateToDetail(Class('', '', 2), 'Add CLASS');
+          navigateToDetail(Class('', '', '', 1), 'Add Class');
         },
 
         tooltip: 'Add Class',
@@ -49,6 +49,7 @@ class ClassListState extends State<ClassList> {
         child: Icon(Icons.add),
 
       ),
+
     );
   }
 
@@ -65,25 +66,25 @@ class ClassListState extends State<ClassList> {
           child: ListTile(
 
             leading: CircleAvatar(
-              backgroundColor: getPriorityColor(this.noteList[position].priority),
-              child: getPriorityIcon(this.noteList[position].priority),
+              backgroundColor: getPriorityColor(this.classList[position].priority),
+              child: getPriorityIcon(this.classList[position].priority),
             ),
 
-            title: Text(this.noteList[position].title, style: titleStyle,),
+            title: Text(this.classList[position].title, style: titleStyle,),
 
-            subtitle: Text(this.noteList[position].date),
+            subtitle: Text(this.classList[position].sdate.toString()+'    -    '+this.classList[position].edate.toString()),
 
             trailing: GestureDetector(
               child: Icon(Icons.delete, color: Colors.grey,),
               onTap: () {
-                _delete(context, noteList[position]);
+                _delete(context, classList[position]);
               },
             ),
 
 
             onTap: () {
               debugPrint("ListTile Tapped");
-              navigateToDetail(this.noteList[position],'Edit Class');
+              navigateToDetail(this.classList[position],'Edit Class');
             },
 
           ),
@@ -158,7 +159,7 @@ class ClassListState extends State<ClassList> {
       Future<List<Class>> noteListFuture = databaseHelper.getNoteList();
       noteListFuture.then((noteList) {
         setState(() {
-          this.noteList = noteList;
+          this.classList = noteList;
           this.count = noteList.length;
         });
       });

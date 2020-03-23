@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/class_list.dart';
 import 'dart:async';
-import 'package:shimmer/shimmer.dart';
-import 'package:flutter_app/home_screen.dart';
-import 'package:flutter_app/login_screen.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -21,8 +18,6 @@ class _SplashScreenState extends State<SplashScreen> {
         (status) {
           if (status) {
             _navigateToHome();
-          } else {
-            _navigateToLogin();
           }
         }
     );
@@ -43,20 +38,15 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void _navigateToLogin(){
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            builder: (BuildContext context) => LoginScreen()
-        )
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: const Color(0xffe31825),
 
-      child: Center ( child: Image.asset('assets/img/time-sheet-icon-18.png'),
+      child: Center ( child: Image.asset('assets/img/je.png'),
 
 
 

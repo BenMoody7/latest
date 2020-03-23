@@ -4,12 +4,13 @@ class Class {
   int _id;
   String _title;
   String _description;
-  String _date;
+  String _sdate;
+  String _edate;
   int _priority;
 
-  Class(this._title, this._date, this._priority, [this._description]);
+  Class(this._title, this._sdate, this._edate, this._priority, [this._description]);
 
-  Class.withId(this._id, this._title, this._date, this._priority, [this._description]);
+  Class.withId(this._id, this._title, this._sdate, this._edate, this._priority, [this._description]);
 
   int get id => _id;
 
@@ -19,7 +20,8 @@ class Class {
 
   int get priority => _priority;
 
-  String get date => _date;
+  String get sdate => _sdate;
+  String get edate => _edate;
 
   set title(String newTitle) {
     if (newTitle.length <= 255) {
@@ -39,8 +41,11 @@ class Class {
     }
   }
 
-  set date(String newDate) {
-    this._date = newDate;
+  set sdate(String newDate) {
+    this._sdate = newDate;
+  }
+  set edate(String newDate) {
+    this._edate = newDate;
   }
 
   // Convert a Note object into a Map object
@@ -53,7 +58,8 @@ class Class {
     map['title'] = _title;
     map['description'] = _description;
     map['priority'] = _priority;
-    map['date'] = _date;
+    map['sdate'] = _sdate;
+    map['edate'] = _edate;
 
     return map;
   }
@@ -64,7 +70,8 @@ class Class {
     this._title = map['title'];
     this._description = map['description'];
     this._priority = map['priority'];
-    this._date = map['date'];
+    this._sdate = map['sdate'];
+    this._edate = map['edate'];
   }
 }
 
